@@ -2,9 +2,12 @@
 import { ref } from 'vue';
 import AvisosPanel from './components/AvisosPanel.vue';
 import CollapsibleCard from './components/CollapsibleCard.vue';
+import CustomTestCaseEditor from './components/CustomTestCaseEditor.vue';
 import DatasetSelector from './components/DatasetSelector.vue';
 import DistributionBars from './components/DistributionBars.vue';
 import ExecutionLog from './components/ExecutionLog.vue';
+import ExportButton from './components/ExportButton.vue';
+import Modal from './components/Modal.vue';
 import StatisticsPanel from './components/StatisticsPanel.vue';
 import VarianceChart from './components/VarianceChart.vue';
 import { useDistributionSteps } from './composables/useDistributionSteps';
@@ -29,12 +32,22 @@ const {
 const casoSelecionado = ref<ConfiguracaoTeste | null>(null);
 const modoAutomatico = ref(false);
 const velocidadeMs = ref(1000);
+const modalAberto = ref(false);
 let intervaloAutomatico: number | null = null;
 
 async function handleSelecionar(caso: ConfiguracaoTeste) {
   pararModoAutomatico();
   casoSelecionado.value = caso;
+  modalAberto.value = false; // Fechar modal se estiver aberto
   await executar(caso.entrada, caso.parametros);
+}
+
+function abrirModal() {
+  modalAberto.value = true;
+}
+
+function fecharModal() {
+  modalAberto.value = false;
 }
 
 function iniciarModoAutomatico() {
@@ -86,12 +99,25 @@ function handleUltimo() {
     <!-- Header -->
     <header class="bg-white shadow-sm border-b border-gray-200">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <h1 class="text-3xl font-bold text-gray-900">
-          Sistema de Distribuição de Produtos
-        </h1>
-        <p class="mt-2 text-sm text-gray-600">
-          Visualização interativa do algoritmo de distribuição e balanceamento
-        </p>
+        <div class="flex items-start justify-between">
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900">
+              Sistema de Distribuição de Produtos
+            </h1>
+            <p class="mt-2 text-sm text-gray-600">
+              Visualização interativa do algoritmo de distribuição e balanceamento
+            </p>
+          </div>
+          <button
+            @click="abrirModal"
+            class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-3"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Criar Simulação
+          </button>
+        </div>
       </div>
     </header>
 
@@ -100,6 +126,7 @@ function handleUltimo() {
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Sidebar -->
         <div class="lg:col-span-1 space-y-6">
+          <!-- Seletor de Casos Pré-definidos -->
           <DatasetSelector @selecionar="handleSelecionar" />
 
           <!-- Controles -->
@@ -189,6 +216,15 @@ function handleUltimo() {
 
         <!-- Content Area -->
         <div class="lg:col-span-2 space-y-6">
+          <!-- Botão de Exportação -->
+          <div v-if="historico.length > 0" class="flex justify-end">
+            <ExportButton
+              :historico="historico"
+              :caso-nome="casoSelecionado?.nome"
+              :variancia-maxima="casoSelecionado?.parametros.varianciaMaximaPermitida"
+            />
+          </div>
+
           <!-- Avisos Panel -->
           <AvisosPanel :avisos="avisos" />
 
@@ -242,5 +278,21 @@ function handleUltimo() {
         </div>
       </div>
     </main>
+
+    <!-- Modal de Criação de Simulação -->
+    <Modal v-model="modalAberto" :close-on-overlay="false" @close="fecharModal">
+      <template #icon>
+        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+      </template>
+      <template #title>
+        Criar Nova Simulação
+      </template>
+      <CustomTestCaseEditor 
+        @executar="handleSelecionar"
+        @cancel="fecharModal"
+      />
+    </Modal>
   </div>
 </template>

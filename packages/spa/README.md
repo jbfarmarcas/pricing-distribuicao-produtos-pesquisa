@@ -9,7 +9,9 @@ Interface web interativa para visualização e análise do algoritmo de distribu
 - 📋 **Cards Colapsáveis**: Organize o espaço de trabalho colapsando/expandindo seções
 - ⚙️ **Controles de Navegação**: Avance, retroceda ou reproduza automaticamente as etapas
 - 📝 **Log Detalhado**: Acompanhe cada etapa com informações completas
-- 💾 **Exportação**: Exporte o log de execução para análise offline
+- ✨ **Editor de Casos Personalizados**: Crie seus próprios cenários de teste
+- 📊 **Exportação para Excel**: Exporte resultados completos em formato .xlsx
+- 💡 **Tooltips Informativos**: Explicações detalhadas para todas as métricas e indicadores
 
 ## Interface
 
@@ -25,6 +27,36 @@ Todos os painéis principais são colapsáveis, permitindo focar no que é impor
 - **Log de Execução**: Histórico completo de todas as etapas (iniciado colapsado)
 
 Clique no cabeçalho de qualquer card para expandir ou colapsar.
+
+### Editor de Casos Personalizados
+
+Crie seus próprios cenários de teste diretamente na interface:
+
+1. **Preencha as informações básicas**: Nome e descrição do teste
+2. **Configure os parâmetros**: Quantidade mínima e variância máxima
+3. **Adicione lojas**: Nome e quantidade de produtos
+4. **Adicione concorrentes**: Para cada loja, defina quais concorrentes participam
+5. **Execute**: Clique em "Executar Distribuição" para ver os resultados
+
+### Exportação para Excel
+
+Exporte todos os resultados da distribuição em um arquivo Excel completo com múltiplas abas:
+
+- **Resumo**: Métricas gerais e informações do caso de teste
+- **Distribuição por Loja**: Tabela completa com todos os produtos distribuídos
+- **Por Concorrente**: Estatísticas detalhadas de cada concorrente
+- **Histórico**: Log completo de todas as etapas da execução
+- **Transferências**: Lista de todas as transferências realizadas (se houver)
+
+Clique no botão "Exportar Excel" no topo da área de conteúdo após executar uma distribuição.
+
+## Instalação
+
+Antes de executar pela primeira vez, instale as dependências:
+
+```bash
+npm install
+```
 
 ## Desenvolvimento
 

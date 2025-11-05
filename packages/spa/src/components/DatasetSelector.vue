@@ -1,7 +1,7 @@
 <template>
   <CollapsibleCard :default-expanded="true">
     <template #title>
-      Selecionar Caso de Teste
+      Casos de Teste Pré-definidos
     </template>
 
     <div class="space-y-2 max-h-[600px] overflow-y-auto pr-2">
