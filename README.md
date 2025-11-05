@@ -1,21 +1,25 @@
 # Distribuição Equilibrada de Produtos para Pesquisa de Preços
 
-> **Sistema inteligente de distribuição de produtos para pesquisa de preços com balanceamento automático de variância**
+> **Sistema inteligente de distribuição de produtos para pesquisa de preços com balanceamento automático de variância + Interface de Visualização Interativa**
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)](https://www.typescriptlang.org/)
+[![Vue 3](https://img.shields.io/badge/Vue-3.x-green)](https://vuejs.org/)
 [![Jest](https://img.shields.io/badge/Jest-29.x-green)](https://jestjs.io/)
-[![Testes](https://img.shields.io/badge/testes-20%2F20%20%E2%9C%93-brightgreen)](./src/distribuidor.test.ts)
+[![Testes](https://img.shields.io/badge/testes-20%2F20%20%E2%9C%93-brightgreen)](./packages/core/src/distribuidor.test.ts)
 [![Licença](https://img.shields.io/badge/licença-ISC-blue)](./package.json)
 
 ## 📋 Índice
 
 - [1. Contexto do Problema](#1-contexto-do-problema)
 - [2. Instalação e Uso](#2-instalação-e-uso)
+  - [2.1 Visualização Interativa (SPA)](#21-visualização-interativa-spa)
+  - [2.2 Uso Programático](#22-uso-programático)
 - [3. Restrições e Requisitos](#3-restrições-e-requisitos)
 - [4. Solução Implementada](#4-solução-implementada)
 - [5. Exemplo Prático](#5-exemplo-prático)
 - [6. Resultados e Performance](#6-resultados-e-performance)
-- [7. Documentação Adicional](#7-documentação-adicional)
+- [7. Visualização e Teste de Mesa](#7-visualização-e-teste-de-mesa)
+- [8. Documentação Adicional](#8-documentação-adicional)
 
 ---
 
@@ -70,7 +74,39 @@ O desafio é **distribuir os produtos entre os concorrentes de forma equilibrada
 
 ## 2. Instalação e Uso
 
-### 2.1 Instalação
+Este projeto é organizado como um **monorepo** com dois pacotes:
+- `@distribuicao/core`: Algoritmo de distribuição (TypeScript)
+- `@distribuicao/spa`: Interface de visualização interativa (Vue 3 + Tailwind CSS)
+
+### 2.1 Visualização Interativa (SPA)
+
+A forma mais fácil de explorar o algoritmo é através da interface visual interativa:
+
+```bash
+# Clone o repositório
+git clone <repository-url>
+cd distribuicao-produtos-pesquisa
+
+# Instale as dependências
+npm install
+
+# Inicie o servidor de desenvolvimento
+npm run dev
+```
+
+Abra o navegador em `http://localhost:5173` e você verá:
+
+- **Seletor de Casos de Teste**: Escolha entre 11 casos pré-configurados
+- **Visualização Passo a Passo**: Navegue pelas etapas do algoritmo
+- **Gráficos Interativos**:
+  - Distribuição por Concorrente (Ideal vs Atual)
+  - Evolução da Variância ao longo das iterações
+- **Painel de Estatísticas**: Métricas detalhadas em tempo real
+- **Modo Automático**: Reprodução animada do algoritmo
+
+### 2.2 Uso Programático
+
+#### Instalação
 
 ```bash
 # Clone o repositório
@@ -524,6 +560,118 @@ function validarDistribuicao(
 - Distribuição por categorias de produtos
 - Restrições de capacidade máxima por concorrente
 - Otimização de performance para redes muito grandes (> 100 lojas)
+
+---
+
+## 7. Visualização e Teste de Mesa
+
+### 7.1 Interface SPA (Single Page Application)
+
+O projeto inclui uma interface visual completa desenvolvida em **Vue 3 + Tailwind CSS** que permite:
+
+#### Funcionalidades Principais
+
+**Seleção de Casos de Teste**
+- 11 casos pré-configurados disponíveis
+- Visualização de parâmetros de cada caso
+- Informações resumidas (lojas, concorrentes, produtos)
+
+**Navegação Passo a Passo**
+- Avance/retroceda pelas etapas do algoritmo
+- Veja cada estado intermediário
+- Acompanhe a evolução da distribuição
+
+**Visualizações Gráficas**
+- **Gráfico de Barras Agrupadas**: Compara distribuição Ideal vs Atual por concorrente
+- **Gráfico de Linha**: Mostra evolução da variância ao longo das etapas
+- **Barras de Progresso**: Indica progresso de cada concorrente em direção ao ideal
+
+**Painel de Estatísticas**
+- Métricas em tempo real (total lojas, concorrentes, produtos)
+- Indicador de variância com código de cores
+- Tabela detalhada por concorrente
+- Descrição textual de cada etapa
+
+**Controles Interativos**
+- Botões de navegação (Primeiro, Anterior, Próximo, Último)
+- Barra de progresso visual
+- Modo automático com velocidade ajustável (300ms - 3000ms)
+- Pausar/reproduzir animação
+
+#### Estrutura do Monorepo
+
+```
+distribuicao-produtos-pesquisa/
+├── packages/
+│   ├── core/                 # Algoritmo TypeScript
+│   │   ├── src/
+│   │   │   ├── distribuidor.ts
+│   │   │   ├── dataset.ts
+│   │   │   ├── types.ts
+│   │   │   └── lib.ts       # Exports para SPA
+│   │   └── package.json
+│   │
+│   └── spa/                  # Interface Vue 3
+│       ├── src/
+│       │   ├── App.vue      # Componente principal
+│       │   ├── components/   # Componentes Vue
+│       │   │   ├── DatasetSelector.vue
+│       │   │   ├── DistributionBars.vue
+│       │   │   ├── VarianceChart.vue
+│       │   │   └── StatisticsPanel.vue
+│       │   ├── composables/  # Lógica reutilizável
+│       │   │   └── useDistributionSteps.ts
+│       │   └── types/
+│       │       └── visualization.ts
+│       └── package.json
+│
+└── package.json              # Root workspace
+```
+
+### 7.2 Estados Capturados
+
+A interface captura e visualiza os seguintes estados:
+
+1. **INICIAL**: Configuração inicial com dados de entrada
+2. **CALCULOS_IDEAIS**: Totais ideais calculados para cada concorrente
+3. **DISTRIBUICAO_LOJA**: Distribuição sendo processada em cada loja (múltiplos estados)
+4. **AJUSTE_FINO**: Correções de arredondamento aplicadas
+5. **BALANCEAMENTO**: Iterações de redução de variância
+6. **FINAL**: Resultado final com validação
+
+### 7.3 Como Usar a Visualização
+
+```bash
+# Iniciar o servidor
+npm run dev
+
+# Acessar no navegador
+# http://localhost:5173
+```
+
+**Passos:**
+1. Selecione um caso de teste na barra lateral esquerda
+2. Use os botões de navegação para avançar/retroceder
+3. Observe os gráficos atualizarem em tempo real
+4. Experimente o modo automático para ver a animação completa
+5. Analise a tabela de estatísticas para detalhes numéricos
+
+### 7.4 Scripts Disponíveis
+
+```bash
+# Desenvolvimento
+npm run dev              # Inicia SPA em modo desenvolvimento
+npm run dev:core         # Compila core em modo watch
+
+# Build
+npm run build            # Compila todos os workspaces
+npm run build:core       # Compila apenas o core
+
+# Testes
+npm test                 # Executa testes do core
+npm run test:watch       # Testes em modo watch
+npm run test:coverage    # Testes com cobertura
+```
 
 ---
 

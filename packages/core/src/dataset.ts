@@ -100,7 +100,8 @@ export const dataset: CasoTeste[] = [
     descricao: 'Cada loja tem concorrentes completamente diferentes',
     parametros: {
       quantidadeMinimaPorConcorrente: 20,
-      varianciaMaximaPermitida: 50, // Maior porque não há sobreposição de concorrentes
+      varianciaMaximaPermitida: 20, // Maior porque não há sobreposição de concorrentes
+      maxIteracoesBalanceamento: 100000,
     },
     entrada: {
       Loja1: {

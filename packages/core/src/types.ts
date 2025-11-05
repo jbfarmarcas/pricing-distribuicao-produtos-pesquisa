@@ -49,6 +49,29 @@ export interface InfoConcorrente {
 }
 
 /**
+ * Nível de severidade de um aviso
+ */
+export enum NivelAviso {
+  INFO = 'info',
+  ATENCAO = 'atencao',
+  CRITICO = 'critico'
+}
+
+/**
+ * Aviso sobre limitações da distribuição
+ */
+export interface Aviso {
+  /** Nível de severidade */
+  nivel: NivelAviso;
+  /** Título do aviso */
+  titulo: string;
+  /** Descrição detalhada */
+  descricao: string;
+  /** Sugestões de melhoria (opcional) */
+  sugestoes?: string[];
+}
+
+/**
  * Resultado da validação da distribuição
  */
 export interface ResultadoValidacao {
@@ -56,6 +79,8 @@ export interface ResultadoValidacao {
   valida: boolean;
   /** Mensagens de erro, se houver */
   erros: string[];
+  /** Avisos sobre a distribuição */
+  avisos?: Aviso[];
   /** Estatísticas da distribuição */
   estatisticas?: {
     totalProdutos: number;

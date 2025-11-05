@@ -1,25 +1,24 @@
 {
   "name": "distribuicao-produtos-pesquisa",
   "version": "1.0.0",
-  "description": "Temos uma rede de lojas que precisa realizar pesquisas de preços em concorrentes. Cada loja possui: - Uma quantidade específica de produtos que devem ser pesquisados - Uma lista de concorrentes onde realizará as pesquisas",
-  "main": "index.js",
+  "description": "Sistema de distribuição de produtos para pesquisa de preços em rede de lojas",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "build": "tsc",
-    "dev": "tsc --watch"
+    "dev": "npm run dev --workspace=@distribuicao/spa",
+    "dev:core": "npm run dev --workspace=@distribuicao/core",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspace=@distribuicao/core",
+    "test:watch": "npm run test:watch --workspace=@distribuicao/core",
+    "test:coverage": "npm run test:coverage --workspace=@distribuicao/core"
   },
-  "keywords": [],
+  "keywords": ["distribuição", "pesquisa", "preços", "otimização"],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "devDependencies": {
-    "@types/jest": "^30.0.0",
     "@types/node": "^24.10.0",
-    "jest": "^30.2.0",
-    "ts-jest": "^29.4.5",
-    "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   }
 }
