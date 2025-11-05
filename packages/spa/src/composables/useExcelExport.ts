@@ -1,6 +1,6 @@
+import type { DistribuicaoDados } from '@distribuicao/core';
 import * as XLSX from 'xlsx';
 import type { EstadoAlgoritmo } from '../types/visualization';
-import type { DistribuicaoDados } from '@distribuicao/core';
 
 export function useExcelExport() {
   function exportarParaExcel(
@@ -15,6 +15,11 @@ export function useExcelExport() {
 
     const workbook = XLSX.utils.book_new();
     const estadoFinal = historico[historico.length - 1];
+    
+    if (!estadoFinal) {
+      alert('Erro: Estado final não encontrado');
+      return;
+    }
 
     // Aba 1: Resumo
     const resumoData = criarAbaResumo(historico, casoNome, varianciaMaxima);
@@ -64,6 +69,10 @@ export function useExcelExport() {
     varianciaMaxima?: number
   ): any[][] {
     const estadoFinal = historico[historico.length - 1];
+    if (!estadoFinal) {
+      return [['ERRO: Estado final não encontrado']];
+    }
+    
     const totalProdutos = Object.values(estadoFinal.distribuicao).reduce(
       (sum, loja) => sum + loja.QuantidadeProdutosPesquisa,
       0
@@ -122,7 +131,10 @@ export function useExcelExport() {
     // Total por loja
     data.push(['Total de Produtos por Loja:']);
     Object.entries(distribuicao).forEach(([nomeLoja, loja]) => {
-      const totalDistribuido = Object.values(loja.Concorrentes).reduce((sum, qtd) => sum + (qtd || 0), 0);
+      const totalDistribuido = Object.values(loja.Concorrentes).reduce(
+        (sum, qtd) => (sum || 0) + (qtd || 0), 
+        0
+      );
       data.push([
         nomeLoja,
         '',
@@ -151,9 +163,10 @@ export function useExcelExport() {
     data.push([]);
     
     // Total geral
-    const totalGeral = Object.values(distribuicao).reduce((sum, loja) => 
-      sum + Object.values(loja.Concorrentes).reduce((s, qtd) => s + (qtd || 0), 0), 0
-    );
+    const totalGeral = Object.values(distribuicao).reduce((sum, loja) => {
+      const lojaTotal = Object.values(loja.Concorrentes).reduce((s, qtd) => (s || 0) + (qtd || 0), 0) || 0;
+      return (sum || 0) + lojaTotal;
+    }, 0);
     const totalProdutos = Object.values(distribuicao).reduce((sum, loja) => 
       sum + loja.QuantidadeProdutosPesquisa, 0
     );
