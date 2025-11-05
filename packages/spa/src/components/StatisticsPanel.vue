@@ -24,21 +24,27 @@
       <!-- Métricas Principais -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="p-3 bg-gray-50 rounded-lg">
-          <div class="text-xs text-gray-500 uppercase tracking-wide">Total Lojas</div>
+          <Tooltip text="Quantidade total de lojas que receberão produtos da pesquisa">
+            <div class="text-xs text-gray-500 uppercase tracking-wide">Total Lojas</div>
+          </Tooltip>
           <div class="text-2xl font-bold text-gray-800 mt-1">
             {{ Object.keys(estado.distribuicao).length }}
           </div>
         </div>
 
         <div class="p-3 bg-gray-50 rounded-lg">
-          <div class="text-xs text-gray-500 uppercase tracking-wide">Concorrentes</div>
+          <Tooltip text="Número de concorrentes que terão produtos distribuídos">
+            <div class="text-xs text-gray-500 uppercase tracking-wide">Concorrentes</div>
+          </Tooltip>
           <div class="text-2xl font-bold text-gray-800 mt-1">
             {{ estado.concorrentes.length }}
           </div>
         </div>
 
         <div class="p-3 bg-gray-50 rounded-lg">
-          <div class="text-xs text-gray-500 uppercase tracking-wide">Total Produtos</div>
+          <Tooltip text="Soma total de todos os produtos a serem distribuídos entre as lojas">
+            <div class="text-xs text-gray-500 uppercase tracking-wide">Total Produtos</div>
+          </Tooltip>
           <div class="text-2xl font-bold text-gray-800 mt-1">
             {{ calcularTotalProdutos() }}
           </div>
@@ -46,10 +52,12 @@
 
         <div class="p-3 rounded-lg"
           :class="estado.variancia !== undefined ? getVarianciaClass() : 'bg-gray-50'">
-          <div class="text-xs uppercase tracking-wide"
-            :class="estado.variancia !== undefined ? 'text-gray-700' : 'text-gray-500'">
-            Variância
-          </div>
+          <Tooltip text="Medida de desequilíbrio entre concorrentes. Quanto menor, mais equilibrada a distribuição">
+            <div class="text-xs uppercase tracking-wide"
+              :class="estado.variancia !== undefined ? 'text-gray-700' : 'text-gray-500'">
+              Variância
+            </div>
+          </Tooltip>
           <div class="text-2xl font-bold mt-1"
             :class="estado.variancia !== undefined ? 'text-gray-900' : 'text-gray-800'">
             {{ estado.variancia !== undefined ? estado.variancia.toFixed(2) + '%' : 'N/A' }}
@@ -60,7 +68,7 @@
       <!-- Tabela de Concorrentes -->
       <div class="mt-6">
         <h3 class="text-sm font-semibold text-gray-700 mb-3">Detalhes por Concorrente</h3>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto overflow-y-visible">
           <table class="min-w-full divide-y divide-gray-200 text-sm">
             <thead class="bg-gray-50">
               <tr>
@@ -68,19 +76,29 @@
                   Concorrente
                 </th>
                 <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Lojas
+                  <Tooltip text="Número de lojas onde este concorrente aparece" :show-icon="false" position="bottom">
+                    <span class="cursor-help border-b border-dashed border-gray-400">Lojas</span>
+                  </Tooltip>
                 </th>
                 <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Ideal
+                  <Tooltip text="Quantidade ideal calculada para este concorrente receber" :show-icon="false" position="bottom">
+                    <span class="cursor-help border-b border-dashed border-gray-400">Ideal</span>
+                  </Tooltip>
                 </th>
                 <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Atual
+                  <Tooltip text="Quantidade que este concorrente já recebeu na distribuição" :show-icon="false" position="bottom">
+                    <span class="cursor-help border-b border-dashed border-gray-400">Atual</span>
+                  </Tooltip>
                 </th>
                 <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Diferença
+                  <Tooltip text="Diferença entre ideal e atual. Verde: próximo/completo, Amarelo: moderado, Vermelho: significativo" :show-icon="false" position="bottom">
+                    <span class="cursor-help border-b border-dashed border-gray-400">Diferença</span>
+                  </Tooltip>
                 </th>
                 <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  % Ideal
+                  <Tooltip text="Percentual do ideal já distribuído para este concorrente" :show-icon="false" position="bottom">
+                    <span class="cursor-help border-b border-dashed border-gray-400">% Ideal</span>
+                  </Tooltip>
                 </th>
               </tr>
             </thead>
@@ -150,6 +168,7 @@
 import type { InfoConcorrente } from '@distribuicao/core';
 import type { EstadoAlgoritmo, EstadoExecucao } from '../types/visualization';
 import CollapsibleCard from './CollapsibleCard.vue';
+import Tooltip from './Tooltip.vue';
 
 const props = defineProps<{
   estado?: EstadoAlgoritmo | null;
